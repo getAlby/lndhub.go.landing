@@ -1,4 +1,5 @@
-# LndHub.go
+![Image](/lndhubgo.png)
+
 Wrapper for Lightning Network Daemon (lnd). It provides separate accounts with minimum trust for end users.
 
 Live deployment at [ln.getalby.com](https://ln.getalby.com).
@@ -109,3 +110,20 @@ For an example dashboard, see https://grafana.com/grafana/dashboards/10913.
                   data                           └────────────────────────┘                     
                                                                                                 
 ```
+
+## Code
+[GitHub](https://github.com/getAlby/lndhub.go)
+
+## Download
+[Latest](https://github.com/getAlby/lndhub.go/releases/latest)
+![GitHub all releases](https://img.shields.io/github/downloads/getalby/lndhub.go/total?style=social)
+
+## Contributors
+[![Image](https://avatars.githubusercontent.com/u/33457577?s=32&v=4)](https://github.com/kiwiidb)
+[![Image](https://avatars.githubusercontent.com/u/318?s=32&v=4)](https://github.com/bumi)
+[![Image](https://avatars.githubusercontent.com/u/13931437?s=32&v=4)](https://github.com/skosito)
+[![Image](https://avatars.githubusercontent.com/u/59229299?s=32&v=4)](https://github.com/patche-v)
+[![Image](https://avatars.githubusercontent.com/u/327569?s=32&v=4)](https://github.com/ruseinov)
+
+## Help
+[Alby Slack channel #lndhub](https://join.slack.com/t/getalby/shared_invite/zt-182oaod34-5kx5cKjIWmZR_vCvX2L8Ig)
