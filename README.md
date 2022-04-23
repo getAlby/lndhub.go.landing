@@ -1,5 +1,3 @@
-# LNDHUB.GO
-
 ![Image](/lndhubgo.png)
 
 Wrapper for Lightning Network Daemon (lnd). It provides separate accounts with minimum trust for end users.
