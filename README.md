@@ -116,6 +116,7 @@ For an example dashboard, see https://grafana.com/grafana/dashboards/10913.
 
 ## Download
 [Latest](https://github.com/getAlby/lndhub.go/releases/latest)
+
 ![GitHub all releases](https://img.shields.io/github/downloads/getalby/lndhub.go/total?style=social)
 
 ## Contributors
@@ -126,4 +127,4 @@ For an example dashboard, see https://grafana.com/grafana/dashboards/10913.
 [![Image](https://avatars.githubusercontent.com/u/327569?s=32&v=4)](https://github.com/ruseinov)
 
 ## Help
-[Alby Slack channel #lndhub](https://join.slack.com/t/getalby/shared_invite/zt-182oaod34-5kx5cKjIWmZR_vCvX2L8Ig)
+Join the Alby [Slack](https://join.slack.com/t/getalby/shared_invite/zt-182oaod34-5kx5cKjIWmZR_vCvX2L8Ig) channel #lndhub.
