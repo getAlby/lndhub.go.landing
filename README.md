@@ -1,37 +1,110 @@
-## Welcome to GitHub Pages
+# LndHub.go
+Wrapper for Lightning Network Daemon (lnd). It provides separate accounts with minimum trust for end users.
 
-You can use the [editor on GitHub](https://github.com/getAlby/lndhub.go.landing/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
+Live deployment at [ln.getalby.com](https://ln.getalby.com).
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### [LndHub](https://github.com/BlueWallet/LndHub) compatible API implemented in Go using relational database backends
 
-### Markdown
+* Using a relational database (PostgreSQL and SQLite)
+* Focussing only on Lightning (no onchain functionality)
+* No runtime dependencies (simple Go executable)
+* Extensible to add more features 
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+### Status: alpha 
 
-```markdown
-Syntax highlighted code block
+## Known Issues
 
-# Header 1
-## Header 2
-### Header 3
+* Fee reserves are not checked prior to making the payment. This can cause a user's balance to go below 0.
 
-- Bulleted
-- List
+## Configuration
 
-1. Numbered
-2. List
+All required configuration is done with environment variables and a `.env` file can be used.
+Check the `.env_example` for an example.
 
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+```shell
+cp .env_example .env
+vim .env # edit your config
 ```
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+### Available configuration
 
-### Jekyll Themes
++ `DATABASE_URI`: The URI for the database. If you want to use SQLite use for example: `file:data.db`
++ `JWT_SECRET`: We use [JWT](https://jwt.io/) for access tokens. Configure your secret here
++ `JWT_ACCESS_EXPIRY`: How long the access tokens should be valid (in seconds, default 2 days)
++ `JWT_REFRESH_EXPIRY`: How long the refresh tokens should be valid (in seconds, default 7 days)
++ `LND_ADDRESS`: LND gRPC address (with port) (e.g. localhost:10009)
++ `LND_MACAROON_HEX`: LND macaroon (hex)
++ `LND_CERT_HEX`: LND certificate (hex)
++ `CUSTOM_NAME`: Name used to overwrite the node alias in the getInfo call
++ `LOG_FILE_PATH`: (optional) By default all logs are written to STDOUT. If you want to log to a file provide the log file path here
++ `SENTRY_DSN`: (optional) Sentry DSN for exception tracking
++ `PORT`: (default: 3000) Port the app should listen on
++ `DEFAULT_RATE_LIMIT`: (default: 10) Requests per second rate limit
++ `STRICT_RATE_LIMIT`: (default: 10) Requests per burst rate limit (e.g. 1 request each 10 seconds)
++ `BURST_RATE_LIMIT`: (default: 1) Rate limit burst
++ `ENABLE_PROMETHEUS`: (default: false) Enable Prometheus metrics to be exposed
++ `PROMETHEUS_PORT`: (default: 9092) Prometheus port (path: `/metrics`)
+## Developing
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/getAlby/lndhub.go.landing/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+```shell
+go run main.go
+```
 
-### Support or Contact
+### Building
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+To build an `lndhub` executable, run the following commands:
+
+```shell
+make
+```
+
+### Development LND setup
+
+To run your own local lightning network and LND you can use [Lightning Polar](https://lightningpolar.com/) which helps you to spin up local LND instances. 
+
+Alternatively you can also use the [Alby simnetwork](https://github.com/getAlby/lightning-browser-extension/wiki/Test-setup)
+
+
+## Database
+LndHub.go supports PostgreSQL and SQLite as database backend. But SQLite does not support the same data consistency checks as PostgreSQL.
+
+## Prometheus
+
+Prometheus metrics can be optionally exposed through the `ENABLE_PROMETHEUS` environment variable.
+For an example dashboard, see https://grafana.com/grafana/dashboards/10913.
+
+### Ideas
++ Using low level database constraints to prevent data inconsistencies
++ Follow double-entry bookkeeping ideas (Every transaction is a debit of one account and a credit to another one)
++ Support multiple database backends (PostgreSQL for production, SQLite for development and personal/friend setups)
+
+### Data model
+
+```
+                                                     ┌─────────────┐                            
+                                                     │    User     │                            
+                                                     └─────────────┘                            
+                                                            │                                   
+                                  ┌─────────────────┬───────┴─────────┬─────────────────┐       
+                                  ▼                 ▼                 ▼                 ▼       
+       Accounts:          ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+                          │   Incoming   │  │   Current    │  │   Outgoing   │  │     Fees     │
+       Every user has     └──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘
+       four accounts                                                                            
+                                                                                                
+                           Every Transaction Entry is associated to one debit account and one   
+                                                    credit account                             
+                                                                                                
+                                                 ┌────────────────────────┐                     
+                                                 │Transaction Entry       │                     
+                                                 │                        │                     
+                                                 │+ user_id               │                     
+                   ┌────────────┐                │+ invoice_id            │                     
+                   │  Invoice   │────────────────▶+ debit_account_id      │                     
+                   └────────────┘                │+ credit_account_id     │                     
+                                                 │+ amount                │                     
+                  Invoice holds the              │+ ...                   │                     
+                  lightning related              │                        │                     
+                  data                           └────────────────────────┘                     
+                                                                                                
+```
