@@ -1,3 +1,5 @@
+# LNDHUB.GO
+
 ![Image](/lndhubgo.png)
 
 Wrapper for Lightning Network Daemon (lnd). It provides separate accounts with minimum trust for end users.
@@ -127,4 +129,4 @@ For an example dashboard, see https://grafana.com/grafana/dashboards/10913.
 [![Image](https://avatars.githubusercontent.com/u/327569?s=32&v=4)](https://github.com/ruseinov)
 
 ## Help
-Join the Alby [Slack](https://join.slack.com/t/getalby/shared_invite/zt-182oaod34-5kx5cKjIWmZR_vCvX2L8Ig) channel #lndhub.
+Join the Alby [Slack](https://join.slack.com/t/getalby/shared_invite/zt-182oaod34-5kx5cKjIWmZR_vCvX2L8Ig) channel **#lndhub**.
